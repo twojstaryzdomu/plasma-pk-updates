@@ -32,6 +32,7 @@ Kirigami.FormLayout {
     property alias cfg_monthly: monthly.checked
     property alias cfg_check_on_mobile: mobile.checked
     property alias cfg_check_on_battery: battery.checked
+    property alias cfg_deselect_pkgs: deselect_pkgs.text
 
     ButtonGroup {
         id: intervalGroup
@@ -65,5 +66,12 @@ Kirigami.FormLayout {
     CheckBox {
         id: battery
         text: i18nc("@option:check part of a sentence: Check for updates when", "On battery")
+    }
+
+    TextField {
+        id: deselect_pkgs
+        width: parent.width
+        Kirigami.FormData.label: i18nc("@label part of a sentence", "Packages or patches to deselect:")
+        placeholderText: i18n('[Comma-delimited list of packages to deselect]')
     }
 }
