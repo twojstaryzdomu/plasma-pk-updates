@@ -140,40 +140,59 @@ Item {
 
         spacing: units.smallSpacing
 
-        PlasmaExtras.Heading {
-            Layout.fillWidth: true
-            level: 4
-            wrapMode: Text.WordWrap
-            text: !PkUpdates.isNetworkOnline ? i18n("Network is offline") : PkUpdates.message
-        }
+        RowLayout {
+            id: topRow
 
-        PlasmaComponents3.Label {
-            visible: PkUpdates.isActive || PkUpdates.count === 0
-            font.pointSize: theme.smallestFont.pointSize;
-            opacity: 0.6;
-            text: {
-                if (PkUpdates.isActive)
-                    return PkUpdates.statusMessage
-                else if (PkUpdates.isNetworkOnline)
-                    return i18n("Updates are automatically checked %1.",
-                                updateInterval(plasmoid.configuration.daily,
-                                               plasmoid.configuration.weekly,
-                                               plasmoid.configuration.monthly));
-                return ""
+            spacing: units.smallSpacing
+
+            ColumnLayout {
+                id: leftColumn
+
+                spacing: units.smallSpacing
+
+                PlasmaExtras.Heading {
+                    Layout.fillWidth: true
+                    level: 4
+                    wrapMode: Text.WordWrap
+                    text: !PkUpdates.isNetworkOnline ? i18n("Network is offline") : PkUpdates.message
+                }
+
+                PlasmaComponents3.Label {
+                    visible: PkUpdates.isActive || PkUpdates.count === 0
+                    font.pointSize: theme.smallestFont.pointSize;
+                    opacity: 0.6;
+                    text: {
+                        if (PkUpdates.isActive)
+                            return PkUpdates.statusMessage
+                        else if (PkUpdates.isNetworkOnline)
+                            return i18n("Updates are automatically checked %1.",
+                                        updateInterval(plasmoid.configuration.daily,
+                                                    plasmoid.configuration.weekly,
+                                                    plasmoid.configuration.monthly));
+                        return ""
+                    }
+                    wrapMode: Text.WordWrap
+                }
+
+                PlasmaComponents3.Label {
+                    id: timestampLabel
+                    visible: !PkUpdates.isActive
+                    wrapMode: Text.WordWrap
+                    font.italic: true
+                    font.pointSize: theme.smallestFont.pointSize;
+                    opacity: 0.6;
+                    text: PkUpdates.timestamp
+                    Layout.fillWidth: true
+                }
             }
-            Layout.fillWidth: true
-            wrapMode: Text.WordWrap
-        }
 
-        PlasmaComponents3.Label {
-            id: timestampLabel
-            Layout.fillWidth: true
-            visible: !PkUpdates.isActive
-            wrapMode: Text.WordWrap
-            font.italic: true
-            font.pointSize: theme.smallestFont.pointSize;
-            opacity: 0.6;
-            text: PkUpdates.timestamp
+            PlasmaComponents3.Button {
+                visible: PkUpdates.count && PkUpdates.isNetworkOnline && !PkUpdates.isActive
+                icon.name: "view-refresh"
+                Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                text: i18n("Check again")
+                onClicked: PkUpdates.checkUpdates(true /* manual */) // circumvent the checks, the user knows what they're doing ;)
+            }
         }
 
         PlasmaComponents3.ProgressBar {
