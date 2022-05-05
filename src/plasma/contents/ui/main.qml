@@ -66,7 +66,7 @@ Item
     Binding {
         target: plasmoid
         property: "status"
-        value: PkUpdates.isActive || !PkUpdates.isSystemUpToDate ? PlasmaCore.Types.ActiveStatus : PlasmaCore.Types.PassiveStatus;
+        value: PkUpdates.isActive || (!PkUpdates.isSystemUpToDate && isAnySelected()) ? PlasmaCore.Types.ActiveStatus : PlasmaCore.Types.PassiveStatus;
     }
 
     Plasmoid.compactRepresentation: PlasmaCore.IconItem {
@@ -92,6 +92,15 @@ Item
             return secs >= secsInWeek;
         } else if (checkMonthly) {
             return secs >= secsInMonth;
+        }
+        return false;
+    }
+
+    function isAnySelected() {
+        for (var i = 0; i < updatesModel.count; i++) {
+            var pkg = updatesModel.get(i)
+            if (pkg.selected)
+                return true;
         }
         return false;
     }
